@@ -8,6 +8,7 @@ using ProSolution.Core.Repositories.Common;
 using ProSolution.DAL.Contexts;
 using ProSolution.DAL.Repositories;
 using ProSolution.DAL.Repositories.Common;
+using Pomelo.EntityFrameworkCore.MySql; 
 
 namespace ProSolution.DAL
 {
@@ -57,12 +58,12 @@ namespace ProSolution.DAL
             var connectionString = configuration.GetConnectionString("MsSql");
 
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(connectionString, sqlOptions =>
-                {
-                    sqlOptions.EnableRetryOnFailure();
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), mysqlOptions =>
+            {
+                mysqlOptions.EnableRetryOnFailure();
                 }));
         }
-
+    
 
         private static void AddIdentity(this IServiceCollection services)
         {
