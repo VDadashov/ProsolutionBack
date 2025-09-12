@@ -11,7 +11,7 @@ namespace ProSolution.DAL.Contexts
     public class AppDbContext : IdentityDbContext<User>
     {
         private IHttpContextAccessor _http;
-        public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor? http = null) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor http) : base(options)
         {
             _http = http;
         }
