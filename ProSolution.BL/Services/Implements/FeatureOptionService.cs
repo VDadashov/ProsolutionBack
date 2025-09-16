@@ -30,20 +30,63 @@ public class FeatureOptionService : IFeatureOptionService
         await _repo.SaveChangeAsync();
     }
 
-    public async Task UpdateAsync(FeatureOptionUpdateDto dto)
+    // public async Task UpdateAsync(FeatureOptionUpdateDto dto)
+    // {
+    //     if (string.IsNullOrWhiteSpace(dto.Id))
+    //         throw new NegativIdException();
+    //
+    //     var entity = await _repo.GetByIdAsync(dto.Id);
+    //     if (entity == null)
+    //         throw new NotFoundException<FeatureOption>();
+    //
+    //     _mapper.Map(dto, entity);
+    //     entity.Slug = dto.Name?.ToLower().Replace(" ", "-") ?? string.Empty;
+    //     _repo.Update(entity);
+    //     await _repo.SaveChangeAsync();
+    // }
+    
+    public async Task UpdateAsync(string id, FeatureOptionUpdateDto dto)
     {
-        if (string.IsNullOrWhiteSpace(dto.Id))
-            throw new NegativIdException();
+        if (string.IsNullOrWhiteSpace(dto.Name))
+            throw new ArgumentException("Name cannot be empty.");
 
-        var entity = await _repo.GetByIdAsync(dto.Id);
-        if (entity == null)
+        string[] include = { $"{nameof(FeatureOption.FeatureOptionItems)}" };
+
+        var featureOption = await _repo.GetByIdAsync(id, true, include);
+        if (featureOption == null)
             throw new NotFoundException<FeatureOption>();
 
-        _mapper.Map(dto, entity);
-        entity.Slug = dto.Name?.ToLower().Replace(" ", "-") ?? string.Empty;
-        _repo.Update(entity);
+        int? oldIndex = featureOption.Index;
+        int? newIndex = dto.Index;
+
+        if (newIndex.HasValue && newIndex != oldIndex)
+        {
+            var sibling = await _repo.GetByExpressionAsync(
+                x => x.Index == newIndex && x.ParentId == featureOption.ParentId && x.Id != id
+            );
+
+            if (sibling != null)
+            {
+                sibling.Index = oldIndex;
+                _repo.Update(sibling);
+            }
+
+            featureOption.Index = newIndex;
+        }
+
+        _mapper.Map(dto, featureOption);
+        featureOption.Slug = await GenerateSlugAsync(featureOption);
+
+        _repo.Update(featureOption);
         await _repo.SaveChangeAsync();
     }
+    
+    
+        private async Task<string> GenerateSlugAsync(FeatureOption featureOption)
+        {
+            return featureOption.Name?.ToLower().Replace(" ", "-") ?? string.Empty;
+        }
+    
 
     public async Task DeleteAsync(string id)
     {

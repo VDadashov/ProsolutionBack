@@ -5,11 +5,13 @@ using ProSolution.Core.Repositories.Common;
 using ProSolution.DAL.Contexts;
 using ProSolution.DAL.Repositories.Common;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ProSolution.DAL.Repositories
 {
     public class FeatureOptionRepository : GenericRepository<FeatureOption>, IFeatureOptionRepository
     {
+        protected readonly AppDbContext _context;
         private readonly DbSet<FeatureOptionItem> _featureOptionItems;
 
         public FeatureOptionRepository(AppDbContext context) : base(context)
@@ -63,6 +65,21 @@ namespace ProSolution.DAL.Repositories
                 }
             }
             return query;
+        }
+        
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
+        }
+        
+        public async Task CommitAsync(IDbContextTransaction transaction)
+        {
+            await transaction.CommitAsync();
+        }
+
+        public async Task RollbackAsync(IDbContextTransaction transaction)
+        {
+            await transaction.RollbackAsync();
         }
     
     }
