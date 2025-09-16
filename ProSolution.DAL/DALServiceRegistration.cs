@@ -54,13 +54,13 @@ namespace ProSolution.DAL
         }
         private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
-            // SQL Database 
-            var connectionString = Environment.GetEnvironmentVariable("CloudConnection")
-                                         ?? configuration.GetConnectionString("MsSql");
+            var connectionString = configuration.GetConnectionString("MsSql");
 
             services.AddDbContext<AppDbContext>(options =>
-                options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 21)),
-                mySqlOptions => mySqlOptions.EnableStringComparisonTranslations()));
+                options.UseSqlServer(connectionString, sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure();
+                }));
         }
 
 

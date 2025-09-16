@@ -288,23 +288,42 @@ namespace ProSolution.BL.Services.Implements
 
         public async Task DeleteAsync(string id)
         {
+          
             string[] includes =
-                {
-                    $"{nameof(Product.Images)}",
-                    $"{nameof(Product.CategoryProducts)}.{nameof(CategoryProduct.Category)}",
-                    $"{nameof(Product.ProductFeatures)}.{nameof(ProductFeature.FeatureOptionItem)}"
-
-                };
-            var product = await _productRepository.GetByIdAsync(id, true, includes);
-            if (product == null)
-                throw new Exception("Product not found");
-
-            foreach (var image in product.Images!)
             {
-                await _cloudStorageService.DeleteFileAsync(image.ImagePath);
+        $"{nameof(Product.Images)}",
+        $"{nameof(Product.CategoryProducts)}.{nameof(CategoryProduct.Category)}",
+        $"{nameof(Product.ProductFeatures)}.{nameof(ProductFeature.FeatureOptionItem)}"
+    };
+
+           
+            var product = await _productRepository.GetByIdAsync(id, true, includes);
+
+            if (product == null)
+            {
+                throw new Exception("Product not found");
             }
 
+            
+            if (product.Images != null)
+            {
+                foreach (var image in product.Images)
+                {
+                    try
+                    {
+                        await _cloudStorageService.DeleteFileAsync(image.ImagePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                        throw new Exception($"Failed to delete image: {image.ImagePath}", ex);
+                    }
+                }
+            }
+
+           
             _productRepository.Delete(product);
+
             await _productRepository.SaveChangeAsync();
         }
 

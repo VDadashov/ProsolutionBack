@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProSolution.DAL.Contexts;
 
@@ -11,9 +12,11 @@ using ProSolution.DAL.Contexts;
 namespace ProSolution.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250605103053_isVeritificate")]
+    partial class isVeritificate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -478,9 +481,6 @@ namespace ProSolution.DAL.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Index")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -675,9 +675,6 @@ namespace ProSolution.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Slug")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
@@ -937,9 +934,6 @@ namespace ProSolution.DAL.Migrations
 
                     b.Property<DateTime?>("DiscountStartDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool?>("InStock")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");

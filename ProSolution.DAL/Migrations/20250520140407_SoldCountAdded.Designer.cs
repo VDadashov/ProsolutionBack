@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProSolution.DAL.Contexts;
 
@@ -11,9 +12,11 @@ using ProSolution.DAL.Contexts;
 namespace ProSolution.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250520140407_SoldCountAdded")]
+    partial class SoldCountAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace ProSolution.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("CategoryFeatureOptions", b =>
-                {
-                    b.Property<string>("ProductFeatureKeysId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FeatureOptionId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ProductFeatureKeysId", "FeatureOptionId");
-
-                    b.HasIndex("FeatureOptionId");
-
-                    b.ToTable("CategoryFeatureOptions");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -206,77 +194,6 @@ namespace ProSolution.DAL.Migrations
                     b.ToTable("Badges");
                 });
 
-            modelBuilder.Entity("ProSolution.Core.Entities.Basket", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Baskets");
-                });
-
-            modelBuilder.Entity("ProSolution.Core.Entities.BasketItem", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("BasketId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BasketId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("BasketItems");
-                });
-
             modelBuilder.Entity("ProSolution.Core.Entities.Blog", b =>
                 {
                     b.Property<string>("Id")
@@ -303,10 +220,6 @@ namespace ProSolution.DAL.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -449,9 +362,6 @@ namespace ProSolution.DAL.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Slug")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Title")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -478,17 +388,11 @@ namespace ProSolution.DAL.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Index")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("ParentId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Slug")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -560,9 +464,6 @@ namespace ProSolution.DAL.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Slug")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -598,9 +499,6 @@ namespace ProSolution.DAL.Migrations
 
                     b.Property<string>("ParentId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Slug")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -675,9 +573,6 @@ namespace ProSolution.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Slug")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
@@ -926,20 +821,14 @@ namespace ProSolution.DAL.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("DetailSlug")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DiscountEndDate")
+                    b.Property<DateTime>("DiscountEndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<double?>("DiscountPrice")
+                    b.Property<double>("DiscountPrice")
                         .HasColumnType("float");
 
-                    b.Property<DateTime?>("DiscountStartDate")
+                    b.Property<DateTime>("DiscountStartDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool?>("InStock")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -1010,37 +899,6 @@ namespace ProSolution.DAL.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductFeatures");
-                });
-
-            modelBuilder.Entity("ProSolution.Core.Entities.ProductFeatureKeys", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CategoryId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("ProductFeatureKeys");
                 });
 
             modelBuilder.Entity("ProSolution.Core.Entities.ProductImage", b =>
@@ -1143,41 +1001,6 @@ namespace ProSolution.DAL.Migrations
                     b.HasIndex("ProductId1");
 
                     b.ToTable("ProductReviews");
-                });
-
-            modelBuilder.Entity("ProSolution.Core.Entities.ProductSlug", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductSlugs");
                 });
 
             modelBuilder.Entity("ProSolution.Core.Entities.SeoData", b =>
@@ -1352,21 +1175,6 @@ namespace ProSolution.DAL.Migrations
                     b.ToTable("Sliders");
                 });
 
-            modelBuilder.Entity("CategoryFeatureOptions", b =>
-                {
-                    b.HasOne("ProSolution.Core.Entities.FeatureOption", null)
-                        .WithMany()
-                        .HasForeignKey("FeatureOptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProSolution.Core.Entities.ProductFeatureKeys", null)
-                        .WithMany()
-                        .HasForeignKey("ProductFeatureKeysId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1416,25 +1224,6 @@ namespace ProSolution.DAL.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ProSolution.Core.Entities.BasketItem", b =>
-                {
-                    b.HasOne("ProSolution.Core.Entities.Basket", "Basket")
-                        .WithMany("BasketItems")
-                        .HasForeignKey("BasketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProSolution.Core.Entities.Product", "Product")
-                        .WithMany("BasketItems")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Basket");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("ProSolution.Core.Entities.Blog", b =>
@@ -1588,17 +1377,6 @@ namespace ProSolution.DAL.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("ProSolution.Core.Entities.ProductFeatureKeys", b =>
-                {
-                    b.HasOne("ProSolution.Core.Entities.Category", "Category")
-                        .WithMany("ProductFeatureKeys")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
             modelBuilder.Entity("ProSolution.Core.Entities.ProductImage", b =>
                 {
                     b.HasOne("ProSolution.Core.Entities.Product", "Product")
@@ -1625,22 +1403,6 @@ namespace ProSolution.DAL.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("ProSolution.Core.Entities.ProductSlug", b =>
-                {
-                    b.HasOne("ProSolution.Core.Entities.Product", "Product")
-                        .WithMany("ProductSlugs")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("ProSolution.Core.Entities.Basket", b =>
-                {
-                    b.Navigation("BasketItems");
-                });
-
             modelBuilder.Entity("ProSolution.Core.Entities.Blog", b =>
                 {
                     b.Navigation("BlogReviews");
@@ -1663,8 +1425,6 @@ namespace ProSolution.DAL.Migrations
                     b.Navigation("CategoryProducts");
 
                     b.Navigation("Children");
-
-                    b.Navigation("ProductFeatureKeys");
                 });
 
             modelBuilder.Entity("ProSolution.Core.Entities.FeatureOption", b =>
@@ -1690,8 +1450,6 @@ namespace ProSolution.DAL.Migrations
 
             modelBuilder.Entity("ProSolution.Core.Entities.Product", b =>
                 {
-                    b.Navigation("BasketItems");
-
                     b.Navigation("CategoryProducts");
 
                     b.Navigation("Images");
@@ -1699,8 +1457,6 @@ namespace ProSolution.DAL.Migrations
                     b.Navigation("ProductFeatures");
 
                     b.Navigation("ProductReviews");
-
-                    b.Navigation("ProductSlugs");
                 });
 #pragma warning restore 612, 618
         }

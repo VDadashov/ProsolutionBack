@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProSolution.DAL.Contexts;
 
@@ -11,9 +12,11 @@ using ProSolution.DAL.Contexts;
 namespace ProSolution.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250604192742_Add_Basket")]
+    partial class Add_Basket
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -218,9 +221,6 @@ namespace ProSolution.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsVerified")
                         .HasColumnType("bit");
 
                     b.Property<string>("Token")
@@ -478,9 +478,6 @@ namespace ProSolution.DAL.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Index")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -675,9 +672,6 @@ namespace ProSolution.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Slug")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
@@ -937,9 +931,6 @@ namespace ProSolution.DAL.Migrations
 
                     b.Property<DateTime?>("DiscountStartDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool?>("InStock")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -1427,7 +1418,7 @@ namespace ProSolution.DAL.Migrations
                         .IsRequired();
 
                     b.HasOne("ProSolution.Core.Entities.Product", "Product")
-                        .WithMany("BasketItems")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1690,8 +1681,6 @@ namespace ProSolution.DAL.Migrations
 
             modelBuilder.Entity("ProSolution.Core.Entities.Product", b =>
                 {
-                    b.Navigation("BasketItems");
-
                     b.Navigation("CategoryProducts");
 
                     b.Navigation("Images");
