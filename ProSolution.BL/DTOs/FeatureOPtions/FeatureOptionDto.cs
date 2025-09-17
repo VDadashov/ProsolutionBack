@@ -13,12 +13,21 @@ namespace ProSolution.BL.DTOs.Characteristics
 
     }
 
+    // public record FeatureOptionUpdateDto
+    // {
+    //     public string? Id { get; set; }
+    //     [Required]
+    //     [StringLength(100)]
+    //     public string Name { get; set; } = null!;
+    // }
+    
     public record FeatureOptionUpdateDto
     {
         public string? Id { get; set; }
         [Required]
         [StringLength(100)]
         public string Name { get; set; } = null!;
+        public int? Index { get; set; }
     }
 
 
@@ -27,6 +36,7 @@ namespace ProSolution.BL.DTOs.Characteristics
        
         public string Name { get; set; } = null!;
         public string? Slug { get; set; } = null!;
+        public int? Index { get; set; }
 
         public ICollection<FeatureOptionItemIncludeDto>? FeatureOptionItems { get; set; }  
     }
@@ -34,6 +44,7 @@ namespace ProSolution.BL.DTOs.Characteristics
     {
         public string Name { get; set; } = null!;
         public string? Slug { get; set; } = null!;
+        
     }
 
     public record FeatureOptionIncludeProductDto

@@ -3,6 +3,7 @@ using ProSolution.BL.DTOs.Characteristics;
 using ProSolution.BL.DTOs.FeatureOPtions;
 using ProSolution.BL.Exceptions.Common;
 using ProSolution.BL.Services.Interfaces;
+using ProSolution.Core.Entities;
 
 namespace ProSolution.API.Controllers
 {
@@ -24,12 +25,42 @@ namespace ProSolution.API.Controllers
             return StatusCode(StatusCodes.Status201Created);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] FeatureOptionUpdateDto dto)
+        // [HttpPut]
+        // public async Task<IActionResult> Update([FromBody] FeatureOptionUpdateDto dto)
+        // {
+        //     await _featureOptionService.UpdateAsync(dto);
+        //     return NoContent();
+        // }
+        
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(string id, [FromBody] FeatureOptionUpdateDto dto)
         {
-            await _featureOptionService.UpdateAsync(dto);
-            return NoContent();
+            if (string.IsNullOrWhiteSpace(id))
+                return BadRequest("Id cannot be empty.");
+
+            if (dto == null)
+                return BadRequest("Feature option data is required.");
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                await _featureOptionService.UpdateAsync(id, dto);
+                return NoContent();
+            }
+            catch (NotFoundException<FeatureOption>)
+            {
+                return NotFound("Feature option not found.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, "An error occurred while updating the feature option.");
+            }
         }
+        
+        
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)

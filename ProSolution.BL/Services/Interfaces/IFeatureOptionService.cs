@@ -14,7 +14,8 @@ public interface IFeatureOptionService
     Task<FeatureOptionGetDto?> GetByIdAsync(string id);
 
     Task CreateAsync(FeatureOptionCreateDto dto);
-    Task UpdateAsync(FeatureOptionUpdateDto dto);
+    // Task UpdateAsync(FeatureOptionUpdateDto dto);
+    Task UpdateAsync(string id, FeatureOptionUpdateDto dto);
     Task DeleteAsync(string id);
 
     // Для Item'ов
