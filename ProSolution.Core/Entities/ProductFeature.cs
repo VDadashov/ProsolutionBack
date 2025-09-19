@@ -7,5 +7,7 @@
 
         public string FeatureOptionItemId { get; set; }
         public FeatureOptionItem FeatureOptionItem { get; set; } = null!;
+        public int Index { get; set; }
     }
 }
+

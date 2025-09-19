@@ -20,7 +20,12 @@ public record ProductCreateDto
     public ICollection<ProductImageCreateDto>? Images { get; set; }
    
 
-    public List<string>? FeatureOptionItemIds { get; set; }
+    
+    public List<FeatureOptionItemDto>? FeatureOptionItems { get; set; }
+}
 
-
+public class FeatureOptionItemDto
+{
+    public string FeatureOptionItemId { get; set; }  
+    public int Index { get; set; }             
 }
