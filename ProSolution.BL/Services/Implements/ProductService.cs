@@ -62,28 +62,30 @@ namespace ProSolution.BL.Services.Implements
 
             await _productRepository.AddAsync(product);
 
-            if (dto.FeatureOptionItemIds != null)
+            if (dto.FeatureOptionItems != null)
             {
-                foreach (var featureOptionItemId in dto.FeatureOptionItemIds)
+                foreach (var featureOptionItem in dto.FeatureOptionItems)
                 {
                     var productFeature = new ProductFeature
                     {
                         ProductId = product.Id,
-                        FeatureOptionItemId = featureOptionItemId
+                        FeatureOptionItemId = featureOptionItem.FeatureOptionItemId,
+                        Index = featureOptionItem.Index
                     };
+
                     await _productRepository.AddProductFeatureAsync(productFeature);
 
-                    var path = await _featureOptionItemPath(featureOptionItemId);
-                    var slug = _generateSlug(path); 
+                    var path = await _featureOptionItemPath(featureOptionItem.FeatureOptionItemId);
+                    var slug = _generateSlug(path);
 
                     await _productRepository.AddProductSlugAsync(new ProductSlug
                     {
                         Slug = slug,
                         ProductId = product.Id,
                     });
-
                 }
             }
+
 
 
             if (dto.CategoryItemIds != null)
@@ -338,28 +340,32 @@ namespace ProSolution.BL.Services.Implements
         public async Task<ICollection<ProductGetDto>> GetAllAsync()
         {
             string[] includes = {
+                $"{nameof(Product.ProductFeatures)}.{nameof(ProductFeature.FeatureOptionItem)}",
+                $"{nameof(Product.Images)}",
+                $"{nameof(Product.Brand)}",
+                $"{nameof(Product.CategoryProducts)}.{nameof(CategoryProduct.Category)}",
+                $"{nameof(Product.ProductFeatures)}.{nameof(ProductFeature.FeatureOptionItem)}.{nameof(FeatureOptionItem.Parent)}.{nameof(FeatureOptionItem.FeatureOption)}",
+                $"{nameof(Product.ProductFeatures)}.{nameof(ProductFeature.FeatureOptionItem)}.{nameof(FeatureOptionItem.Children)}",
+                $"{nameof(Product.ProductFeatures)}.{nameof(ProductFeature.FeatureOptionItem)}.{nameof(FeatureOptionItem.Parent)}",
+                $"{nameof(Product.ProductSlugs)}",
+                $"{nameof(Product.ProductReviews)}"
+            };
 
-                    $"{nameof(Product.ProductFeatures)}.{nameof(ProductFeature.FeatureOptionItem)}",
+            // Fetch products with includes and sort by max ProductFeature.Index in descending order
+            var query = _productRepository.GetAll(false, includes)
+                .OrderByDescending(p => p.ProductFeatures.Any() ? p.ProductFeatures.Max(f => f.Index) : 0);
 
-                    $"{nameof(Product.Images)}",
-                    $"{nameof(Product.Brand)}",
-                    $"{nameof(Product.CategoryProducts)}.{nameof(CategoryProduct.Category)}",
+            ICollection<Product> items = await query.ToListAsync();
 
-                     $"{nameof(Product.ProductFeatures)}.{nameof(ProductFeature.FeatureOptionItem)}.{nameof(FeatureOptionItem.Parent)}.{nameof(FeatureOptionItem.FeatureOption)}",
-
-                    $"{nameof(Product.ProductFeatures)}.{nameof(ProductFeature.FeatureOptionItem)}.{nameof(FeatureOptionItem.FeatureOption)}",
-                    $"{nameof(Product.ProductFeatures)}.{nameof(ProductFeature.FeatureOptionItem)}.{nameof(FeatureOptionItem.Children)}",
-                    $"{nameof(Product.ProductFeatures)}.{nameof(ProductFeature.FeatureOptionItem)}.{nameof(FeatureOptionItem.Parent)}",
-                    $"{nameof(Product.ProductSlugs)}",
-                    $"{nameof(Product.ProductReviews)}"};
-
-
-            ICollection<Product> items = await _productRepository.GetAll(false, includes).ToListAsync();
-
+            // Map to DTOs and set RatingAverage
             ICollection<ProductGetDto> dtos = _mapper.Map<ICollection<ProductGetDto>>(items);
             foreach (var item in items)
             {
-                dtos.FirstOrDefault(x => x.Id!.Contains(item.Id))!.RatingAvarage = await _productRepository.GetRatingAverageAsync(item.Id);
+                var dto = dtos.FirstOrDefault(x => x.Id == item.Id);
+                if (dto != null)
+                {
+                    dto.RatingAvarage = await _productRepository.GetRatingAverageAsync(item.Id);
+                }
             }
 
             return dtos;
