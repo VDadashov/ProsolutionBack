@@ -54,12 +54,12 @@ namespace ProSolution.DAL
         }
         private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("MsSql");
+            string connectionString = configuration.GetConnectionString("Mysql");
 
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(connectionString, sqlOptions =>
+                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), mysqlOptions =>
                 {
-                    sqlOptions.EnableRetryOnFailure();
+                    mysqlOptions.EnableRetryOnFailure();
                 }));
         }
 

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using ProSolution.BL;
 using ProSolution.Core.Entities.Identity;
@@ -10,9 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddDataAccess(builder.Configuration)
-                .AddBlServices(builder.Configuration);
+               .AddBlServices(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
-
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -25,20 +25,20 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll", policy =>
     {
         policy.WithOrigins(
-                [ "http://localhost:5174", "http://localhost:3000", "https://prosolution.devhost.site/"]
-            )
+                ["http://localhost:5174", "http://localhost:3000", "https://prosolution.devhost.site/"])
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowAnyOrigin()
             .SetIsOriginAllowedToAllowWildcardSubdomains();
     });
 });
- 
+
 builder.Services.AddRouting(options =>
 {
     options.LowercaseUrls = true;
     options.LowercaseQueryStrings = true;
 });
+
 // Swagger config
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -69,7 +69,6 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-
 var app = builder.Build();
 
 // Optional: create a scope for seeding or startup logic
@@ -84,18 +83,13 @@ using (var scope = app.Services.CreateScope())
     await AppDbContextSeed.SeedDatabaseAsync(context, userManager, roleManager);
 }
 
-
-//// Middleware
-//if (app.Environment.IsDevelopment())
-//{
-//}
-
+// Middleware
 app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "AzfreshDagitim API v1");
-        c.RoutePrefix = "swagger"; // bunu yazmasan swagger a??lmaz
-    });
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProSolution API v1");
+    c.RoutePrefix = "swagger";
+});
 
 app.UseRouting();
 app.UseCors("AllowAll");
