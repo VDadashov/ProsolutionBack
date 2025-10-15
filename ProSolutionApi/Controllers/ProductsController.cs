@@ -44,7 +44,6 @@ public class ProductsController : ControllerBase
     [HttpPost("Create")]
     public async Task<IActionResult> Create([FromBody] ProductCreateDto dto)
     {
-        //frombady deyisib stringi obyekte cevirecem
         await _productService.CreateAsync(dto);
         return Ok();
     }
