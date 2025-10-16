@@ -27,6 +27,14 @@ namespace ProSolution.API.Controllers
             return NoContent();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] SettingCreateDto dto)
+        {
+            await _settingService.CreateAsync(dto);
+            return StatusCode(201);
+        }
+
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {

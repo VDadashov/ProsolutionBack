@@ -10,6 +10,7 @@ namespace ProSolution.BL.MapperProfiles
         {
             CreateMap<Setting, SettingGetDto>().ReverseMap();
             CreateMap<SettingUpdateDto, Setting>().ReverseMap();
+            CreateMap<SettingCreateDto, Setting>().ReverseMap();
         }
     }
 }

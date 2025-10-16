@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ProSolution.BL.DTOs;
 using ProSolution.BL.Exceptions.Common;
@@ -101,5 +101,23 @@ namespace ProSolution.BL.Services.Implements
 
             return setting;
         }
+        
+        public async Task CreateAsync(SettingCreateDto dto)
+        {
+            if (string.IsNullOrWhiteSpace(dto.Key))
+                throw new ArgumentException("Key can not be null");
+
+            if (string.IsNullOrWhiteSpace(dto.Value))
+                throw new ArgumentException("Value can not be null");
+
+            if (await _repository.CheckUniqueAsync(x => x.Key.ToLower() == dto.Key.ToLower().Trim()))
+                throw new Exception($"{dto.Key} already exists!");
+
+            var setting = _mapper.Map<Setting>(dto);
+
+            await _repository.AddAsync(setting);
+            await _repository.SaveChangeAsync();
+        }
+
     }
 }

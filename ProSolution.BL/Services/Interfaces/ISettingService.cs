@@ -15,5 +15,6 @@ namespace ProSolution.BL.Services.Interfaces
         Task<ICollection<SettingGetDto>> GetAllAsync();
         Task<PaginationDto<SettingGetDto>> GetAllFilteredAsync(string? search, int take, int page, int order, bool isDeleted);
         Task<SettingGetDto> GetByIdAsync(string id);
+        Task CreateAsync(SettingCreateDto dto);
     }
 }
