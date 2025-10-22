@@ -122,7 +122,6 @@ public class FeatureOptionService : IFeatureOptionService
 
         ICollection<FeatureOption> list = await _repo
             .GetAll(false, includes)
-            //sort by index
             .OrderByDescending(fo => fo.Id)  
             .ToListAsync();
 
