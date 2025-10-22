@@ -116,16 +116,18 @@ public class FeatureOptionService : IFeatureOptionService
     public async Task<ICollection<FeatureOptionGetDto>> GetAll()
     {
         string[] includes = {
-    $"{nameof(FeatureOption.FeatureOptionItems)}.{nameof(FeatureOptionItem.Children)}",
-    $"{nameof(FeatureOption.FeatureOptionItems)}.{nameof(FeatureOptionItem.ProductFeatures)}.{nameof(ProductFeature.Product)}"
-};
+            $"{nameof(FeatureOption.FeatureOptionItems)}.{nameof(FeatureOptionItem.Children)}",
+            $"{nameof(FeatureOption.FeatureOptionItems)}.{nameof(FeatureOptionItem.ProductFeatures)}.{nameof(ProductFeature.Product)}"
+        };
 
         ICollection<FeatureOption> list = await _repo
             .GetAll(false, includes)
+            .OrderByDescending(fo => fo.Id)  
             .ToListAsync();
 
         return _mapper.Map<ICollection<FeatureOptionGetDto>>(list);
     }
+    
 
 
 
